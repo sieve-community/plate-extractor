@@ -1,0 +1,54 @@
+model_version: "1.0.2"
+build:
+  gpu: true
+  system_packages:
+    - build-essential
+    - cmake 
+    - git 
+    - libgtk2.0-dev 
+    - pkg-config 
+    - libavcodec-dev 
+    - libavformat-dev 
+    - libswscale-dev
+    - python-dev 
+    - python-numpy 
+    - libtbb2 
+    - libtbb-dev 
+    - libjpeg-dev 
+    - libpng-devlibtiff-dev 
+    - libjasper-dev 
+    - libdc1394-22-dev
+  python_version: "3.7"
+  python_packages:
+  - blas==1.0               
+  - brotlipy==0.7.0         
+  - cffi==1.15.1            
+  - cmake==3.22.1           
+  - cryptography==37.0.1    
+  - expat==2.4.9            
+  - future==0.18.2          
+  - intel-openmp==2022.1.0  
+  - libcurl==7.84.0         
+  - libgfortran==5.0.0       
+  - libgfortran5==11.3.0    
+  - libopenblas==0.3.21     
+  - libuv==1.40.0           
+  - llvm-openmp==14.0.6     
+  - mkl==2022.1.0           
+  - mkl-include==2022.1.0   
+  - ninja==1.10.2           
+  - ninja-base==1.10.2      
+  - numpy==1.21.5           
+  - numpy-base==1.21.5      
+  - pyopenssl==22.0.0       
+  - pysocks==1.7.1          
+  - pyyaml==6.0             
+  - requests==2.28.1        
+  - rhash==1.4.1            
+  - typing_extensions==4.3.0
+  - urllib3==1.26.11        
+  - zstd==1.5.2             
+predict: "predictor.py:PlateExtractor"
+model_name: "plate-extractor"
+private: true
+iteration: "video"
