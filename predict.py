@@ -7,7 +7,7 @@ from utils import do_detect, read_plates
 class PlateExtractor(TemporalProcessor):
     def setup(self):
         self.model = Darknet("yolov4.cfg")
-        self.model.eval()
+        self.model.load_weights("yolov4.weights")
 
     def predict(self, frame: FrameSingleObject, metadata: UserMetadata) -> List[FrameSingleObject]:
         frame_number = frame.temporal_object.frame_number
