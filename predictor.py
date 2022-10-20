@@ -1,31 +1,25 @@
 from typing import List
+from unittest import result
 from sieve.types import FrameSingleObject, UserMetadata, SingleObject, BoundingBox, TemporalObject
 from sieve.predictors import TemporalProcessor
-from darknet2pytorch import Darknet
-from utils import do_detect, read_plates
+from hyperlpr import HyperLPR_plate_recognition
+
 
 class PlateExtractor(TemporalProcessor):
-    def setup(self):
-        self.model = Darknet("yolov4.cfg")
-        self.model.load_weights("yolov4.weights")
-
     def predict(self, frame: FrameSingleObject, metadata: UserMetadata) -> List[FrameSingleObject]:
+        output_objects = []
         frame_number = frame.temporal_object.frame_number
         frame_data = frame.temporal_object.get_array()
-        
-        # Get boxes detected from model
-        boxes = do_detect(self.model, frame_data)
-
-        # Get plates from boxes
-        results = read_plates(boxes, "classes.names", frame_number)
-        output_objects = self.postprocess_yolo(results)
-        
+        results = HyperLPR_plate_recognition(frame_data) 
+        if len(results) > 0:
+            res = list(results[0])
+            plate, conf, bbox = res[0], res[1], res[2]
+            output_objects.extend(self.postprocess(plate, conf, bbox, frame_number))
         return output_objects
-
-    def postprocess_yolo(self, results):
+    
+    def postprocess(self, plate, conf, bbox, frame_number):
         out = []
-        for box, plate, conf, frame_number in results:
-            bounding_box = BoundingBox.from_array([float(i) for i in box])
-            score = float(conf)
-            temporal_object = TemporalObject(frame_number=frame_number, bounding_box=bounding_box, score=score, plate=plate)
-            out.append(SingleObject(cls="license_plate", temporal_object=temporal_object))
+        bounding_box = BoundingBox.from_array([float(i) for i in bbox])
+        temporal_object = TemporalObject(frame_number=frame_number, bounding_box=bounding_box, score=conf, plate=plate)
+        out.append(SingleObject(cls="license-plate", temporal_object=temporal_object))
+        return out

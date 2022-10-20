@@ -1,25 +1,13 @@
-model_version: "1.0.13"
+model_version: "1.0.31"
 build:
   gpu: true
   system_packages:
   - build-essential
-  - libgtk2.0-dev 
   - pkg-config 
   python_version: "3.7"
   python_packages:
-  - numba==0.56.3
   - numpy==1.21.0
-  - openalpr==1.1.0
   - opencv_python==4.6.0.66
-  - torch==1.12.1
-  - cffi==1.15.1            
-  - cmake==3.22.1           
-  - mkl==2022.1.0           
-  - mkl-include==2022.1.0   
-  - ninja==1.10.2           
-  - pyyaml==6.0             
-  - requests==2.28.1        
-  - typing_extensions==4.3.0
 predict: "predictor.py:PlateExtractor"
 model_name: "plate-extractor"
 private: true
