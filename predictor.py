@@ -10,11 +10,18 @@ class PlateExtractor(TemporalProcessor):
         output_objects = []
         frame_number = frame.temporal_object.frame_number
         frame_data = frame.temporal_object.get_array()
-        results = HyperLPR_plate_recognition(frame_data) 
+        try: 
+            results = HyperLPR_plate_recognition(frame_data) 
+        except Exception as e:
+            print(
+                "Caught exception during prediction: ", e
+            )    
+            return output_objects
         if len(results) > 0:
             res = list(results[0])
             plate, conf, bbox = res[0], res[1], res[2]
-            output_objects.extend(self.postprocess(plate, conf, bbox, frame_number))
+            if conf > 0.75:
+                output_objects.extend(self.postprocess(plate, conf, bbox, frame_number))
         return output_objects
     
     def postprocess(self, plate, conf, bbox, frame_number):
